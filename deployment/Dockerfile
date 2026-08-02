@@ -1,7 +1,7 @@
 # =========================
 # Stage 1: Composer (vendor/)
 # =========================
-FROM php:8.5-cli AS php_vendor
+FROM php:8.4-cli AS php_vendor
 ENV COMPOSER_ALLOW_SUPERUSER=1
 WORKDIR /app
 
@@ -29,7 +29,7 @@ RUN if npm run | grep -q "build"; then npm run build; else echo "No build script
 # =========================
 # Stage 3: Runtime (PHP-FPM)
 # =========================
-FROM php:8.5-fpm AS app
+FROM php:8.4-fpm AS app
 WORKDIR /var/www
 
 ARG REDIS_VER=6.1.0
@@ -37,14 +37,15 @@ ARG user=app
 ARG uid=1000
 
 RUN set -eux; \
-    apt-get -o Acquire::Retries=3 update; \
-    apt-get -o Acquire::Retries=3 install -y --no-install-recommends \
+    apt-get update; \
+    apt-get install -y --no-install-recommends \
+      vim \
       libpng-dev libjpeg-dev libfreetype6-dev libxml2-dev \
-      libzip-dev libicu-dev zlib1g-dev \
+      libzip-dev libicu-dev zlib1g-dev libonig-dev \
       git unzip ca-certificates wget autoconf make gcc pkg-config \
       mariadb-client; \
     docker-php-ext-configure gd --with-freetype --with-jpeg; \
-    docker-php-ext-install -j"$(nproc)" pdo_mysql exif pcntl gd bcmath intl zip; \
+    docker-php-ext-install -j"$(nproc)" pdo_mysql mbstring exif pcntl gd bcmath opcache intl zip; \
     tmpdir="$(mktemp -d)"; cd "$tmpdir"; \
     wget -qO phpredis.tar.gz "https://github.com/phpredis/phpredis/archive/refs/tags/${REDIS_VER}.tar.gz" || \
       wget -qO phpredis.tar.gz "https://github.com/phpredis/phpredis/archive/refs/heads/develop.tar.gz"; \
