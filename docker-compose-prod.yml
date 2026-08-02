@@ -1,0 +1,82 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: ./deployment/Dockerfile
+    image: mountain_app:latest
+    container_name: laravel_app
+    restart: unless-stopped
+    volumes:
+      - '.:/var/www'
+      - './storage:/var/www/storage'
+      - './bootstrap/cache:/var/www/bootstrap/cache'
+    secrets:
+      - mariadb_app_password
+    depends_on:
+      - mariadb
+      - redis
+    networks:
+      - laravel_network
+
+  nginx:
+    image: nginx:alpine
+    container_name: laravel_nginx
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    volumes:
+      - '.:/var/www'
+      - './deployment/nginx/default.conf:/etc/nginx/conf.d/default.conf'
+    depends_on:
+      - app
+    networks:
+      - laravel_network
+
+  mariadb:
+    image: mariadb:latest
+    container_name: laravel_mariadb
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/mariadb_app_password
+      MYSQL_DATABASE: mountain
+      MYSQL_USER: app
+      MYSQL_PASSWORD_FILE: /run/secrets/mariadb_app_password
+    secrets:
+      - mariadb_app_password
+    volumes:
+      - /srv/mariadb-data:/var/lib/mysql
+    networks:
+      - laravel_network
+
+  redis:
+    image: redis:alpine
+    container_name: laravel_redis
+    restart: unless-stopped
+    volumes:
+      - /srv/redis-data:/data
+    networks:
+      - laravel_network
+    expose:
+      - "6379"
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: laravel_phpmyadmin
+    restart: unless-stopped
+    environment:
+      PMA_HOST: mariadb
+      PMA_PORT: 3306
+    ports:
+      - "8080:80"
+    depends_on:
+      - mariadb
+    networks:
+      - laravel_network
+
+networks:
+  laravel_network:
+    driver: bridge
+
+secrets:
+  mariadb_app_password:
+    file: .mariadb_password
