@@ -37,15 +37,14 @@ ARG user=app
 ARG uid=1000
 
 RUN set -eux; \
-    apt-get update; \
-    apt-get install -y --no-install-recommends \
-      vim \
+    apt-get -o Acquire::Retries=3 update; \
+    apt-get -o Acquire::Retries=3 install -y --no-install-recommends \
       libpng-dev libjpeg-dev libfreetype6-dev libxml2-dev \
-      libzip-dev libicu-dev zlib1g-dev libonig-dev \
+      libzip-dev libicu-dev zlib1g-dev \
       git unzip ca-certificates wget autoconf make gcc pkg-config \
       mariadb-client; \
     docker-php-ext-configure gd --with-freetype --with-jpeg; \
-    docker-php-ext-install -j"$(nproc)" pdo_mysql mbstring exif pcntl gd bcmath opcache intl zip; \
+    docker-php-ext-install -j"$(nproc)" pdo_mysql exif pcntl gd bcmath intl zip; \
     tmpdir="$(mktemp -d)"; cd "$tmpdir"; \
     wget -qO phpredis.tar.gz "https://github.com/phpredis/phpredis/archive/refs/tags/${REDIS_VER}.tar.gz" || \
       wget -qO phpredis.tar.gz "https://github.com/phpredis/phpredis/archive/refs/heads/develop.tar.gz"; \
