@@ -29,7 +29,7 @@ RUN if npm run | grep -q "build"; then npm run build; else echo "No build script
 # =========================
 # Stage 3: Runtime (PHP-FPM)
 # =========================
-FROM php:8.4-fpm AS app
+FROM php:8.5-fpm AS app
 WORKDIR /var/www
 
 ARG REDIS_VER=6.1.0
