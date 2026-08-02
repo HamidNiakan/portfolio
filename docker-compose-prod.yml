@@ -67,7 +67,7 @@ services:
       PMA_HOST: mariadb
       PMA_PORT: 3306
     ports:
-      - "8080:80"
+      - "8008:80"
     depends_on:
       - mariadb
     networks:
