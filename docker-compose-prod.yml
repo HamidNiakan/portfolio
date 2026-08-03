@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: ./deployment/Dockerfile
-    image: portfolio_app:latest
+    image: laravel_app:latest
     container_name: laravel_app
     restart: unless-stopped
     volumes:
