@@ -28,7 +28,9 @@ x-app: &app
     - mariadb_app_password
   volumes:
     - ./storage:/var/www/storage
-    - ./bootstrap/cache:/var/www/bootstrap/cache
+    # bootstrap/cache is intentionally NOT mounted: it must use the image's
+    # clean, --no-dev package manifest. Mounting a host dir here can inject a
+    # stale dev manifest (e.g. laravel/pail) and crash the app in production.
   networks:
     - laravel_network
   security_opt:

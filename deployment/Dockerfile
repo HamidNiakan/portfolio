@@ -68,6 +68,9 @@ COPY --from=node_build  /app/public/build ./public/build
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 RUN composer dump-autoload -o --no-dev
+# Build a clean, production (--no-dev) package manifest inside the image so a
+# dev-only provider (e.g. laravel/pail) can never poison the runtime container.
+RUN php artisan package:discover --ansi || true
 
 RUN chmod +x /entrypoint.sh
 
