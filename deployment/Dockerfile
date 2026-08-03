@@ -68,9 +68,6 @@ COPY --from=node_build  /app/public/build ./public/build
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 RUN composer dump-autoload -o --no-dev
-# Build a clean, production (--no-dev) package manifest inside the image so a
-# dev-only provider (e.g. laravel/pail) can never poison the runtime container.
-RUN php artisan package:discover --ansi || true
 
 RUN chmod +x /entrypoint.sh
 
@@ -84,8 +81,3 @@ EXPOSE 9000
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["php-fpm"]
-
-# Nginx receives only the public application files from the built image.
-FROM nginx:1.28-alpine AS web
-COPY ./deployment/nginx/default.conf /etc/nginx/conf.d/default.conf
-COPY --from=app /var/www/public /var/www/public
