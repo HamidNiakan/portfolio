@@ -1,77 +1,137 @@
+name: portfolio
+
+x-app: &app
+  image: mountain_app:latest
+  restart: unless-stopped
+  env_file:
+    - .env
+  environment:
+    APP_ENV: production
+    APP_DEBUG: "false"
+    APP_URL: https://dev-programmer.ir
+    LOG_CHANNEL: stderr
+    LOG_LEVEL: warning
+    DB_CONNECTION: mariadb
+    DB_HOST: mariadb
+    DB_PORT: "3306"
+    DB_DATABASE: mountain
+    DB_USERNAME: app
+    REDIS_CLIENT: phpredis
+    REDIS_HOST: redis
+    REDIS_PORT: "6379"
+    REDIS_PASSWORD: ""
+    CACHE_STORE: redis
+    SESSION_DRIVER: redis
+    SESSION_SECURE_COOKIE: "true"
+    QUEUE_CONNECTION: redis
+  secrets:
+    - mariadb_app_password
+  volumes:
+    - ./storage:/var/www/storage
+    - ./bootstrap/cache:/var/www/bootstrap/cache
+  networks:
+    - laravel_network
+  security_opt:
+    - no-new-privileges:true
+
 services:
   app:
+    <<: *app
     build:
       context: .
-      dockerfile: ./deployment/Dockerfile
-    image: mountain_app:latest
-    container_name: laravel_app
-    restart: unless-stopped
-    volumes:
-      - '.:/var/www'
-      - './storage:/var/www/storage'
-      - './bootstrap/cache:/var/www/bootstrap/cache'
-    secrets:
-      - mariadb_app_password
+      dockerfile: deployment/Dockerfile
+      target: app
     depends_on:
-      - mariadb
-      - redis
-    networks:
-      - laravel_network
+      mariadb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "php -r 'exit(@fsockopen(\"127.0.0.1\", 9000) ? 0 : 1);'"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 20s
 
   nginx:
-    image: nginx:alpine
-    container_name: laravel_nginx
+    build:
+      context: .
+      dockerfile: deployment/Dockerfile
+      target: web
+    image: mountain_web:latest
     restart: unless-stopped
     ports:
-      - "8000:80"
+      - "127.0.0.1:8000:80"
     volumes:
-      - '.:/var/www'
-      - './deployment/nginx/default.conf:/etc/nginx/conf.d/default.conf'
+      - ./storage:/var/www/storage:ro
     depends_on:
-      - app
+      app:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1/up >/dev/null || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
     networks:
       - laravel_network
+    security_opt:
+      - no-new-privileges:true
+
+  worker:
+    <<: *app
+    command: ["php", "artisan", "queue:work", "--sleep=3", "--tries=3", "--timeout=90", "--max-time=3600"]
+    stop_grace_period: 2m
+    depends_on:
+      mariadb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  scheduler:
+    <<: *app
+    command: ["php", "artisan", "schedule:work"]
+    depends_on:
+      mariadb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
 
   mariadb:
     image: mariadb:latest
-    container_name: laravel_mariadb
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/mariadb_app_password
-      MYSQL_DATABASE: mountain
-      MYSQL_USER: app
-      MYSQL_PASSWORD_FILE: /run/secrets/mariadb_app_password
+      MARIADB_ROOT_PASSWORD_FILE: /run/secrets/mariadb_app_password
+      MARIADB_DATABASE: mountain
+      MARIADB_USER: app
+      MARIADB_PASSWORD_FILE: /run/secrets/mariadb_app_password
     secrets:
       - mariadb_app_password
     volumes:
       - /srv/mariadb-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
     networks:
       - laravel_network
 
   redis:
     image: redis:alpine
-    container_name: laravel_redis
     restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes", "--appendfsync", "everysec"]
     volumes:
       - /srv/redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
     networks:
       - laravel_network
-    expose:
-      - "6379"
-
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin:latest
-    container_name: laravel_phpmyadmin
-    restart: unless-stopped
-    environment:
-      PMA_HOST: mariadb
-      PMA_PORT: 3306
-    ports:
-      - "8008:80"
-    depends_on:
-      - mariadb
-    networks:
-      - laravel_network
+    security_opt:
+      - no-new-privileges:true
 
 networks:
   laravel_network:

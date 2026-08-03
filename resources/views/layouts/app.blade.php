@@ -3,15 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#111814">
+    <meta name="theme-color" content="#f4f3ec">
     @include('partials.seo')
 
-    <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
+    <link rel="icon" href="{{ asset('favicon.svg') }}" type="image/svg+xml">
+    <link rel="icon" href="{{ asset('favicon-32.png') }}" sizes="32x32" type="image/png">
+    <link rel="apple-touch-icon" href="{{ asset('apple-touch-icon.png') }}">
+    <link rel="manifest" href="{{ asset('site.webmanifest') }}">
+
+    @php
+        $styleV = @filemtime(public_path('assets/web/css/style.css'));
+        $scriptV = @filemtime(public_path('assets/web/js/script.js'));
+    @endphp
+
+    <link rel="preload" as="image" href="{{ asset('assets/web/image/me.webp') }}" type="image/webp" fetchpriority="high">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="{{ asset('assets/web/css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/web/css/style.css') }}?v={{ $styleV }}">
 
 </head>
 <body>
@@ -62,6 +74,6 @@
     </div>
 </footer>
 
-<script src="{{ asset('assets/web/js/script.js') }}" defer></script>
+<script src="{{ asset('assets/web/js/script.js') }}?v={{ $scriptV }}" defer></script>
 </body>
 </html>

@@ -81,3 +81,8 @@ EXPOSE 9000
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["php-fpm"]
+
+# Nginx receives only the public application files from the built image.
+FROM nginx:1.28-alpine AS web
+COPY ./deployment/nginx/default.conf /etc/nginx/conf.d/default.conf
+COPY --from=app /var/www/public /var/www/public

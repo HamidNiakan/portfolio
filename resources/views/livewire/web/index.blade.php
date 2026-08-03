@@ -33,7 +33,10 @@
 
             <div class="portrait-column">
                 <figure class="portrait-frame">
-                    <img src="{{ asset('assets/web/image/me.png') }}" alt="تصویر حمیدرضا نیاکان" width="720" height="720">
+                    <picture>
+                        <source srcset="{{ asset('assets/web/image/me.webp') }}" type="image/webp">
+                        <img src="{{ asset('assets/web/image/me-720.jpg') }}" alt="تصویر حمیدرضا نیاکان" width="720" height="720" fetchpriority="high" decoding="async">
+                    </picture>
                     <figcaption>
                         <span>مستقر در تهران</span>
                         <span>همکاری حضوری و دورکار</span>
@@ -249,7 +252,7 @@
                     <i class="fab fa-telegram" aria-hidden="true"></i>
                 </a>
                 <a href="https://wa.me/989178223037" target="_blank" rel="noopener noreferrer">
-                    <span><small>واتساپ</small><b dir="ltr">@DeveloperProgrammer</b></span>
+                    <span><small>واتساپ</small><b dir="ltr">+98 917 822 3037</b></span>
                     <i class="fab fa-whatsapp" aria-hidden="true"></i>
                 </a>
                 <p><i class="fas fa-location-dot" aria-hidden="true"></i> تهران، ایران</p>

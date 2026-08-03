@@ -5,6 +5,8 @@
     $seoUrl = url('/');
     $seoImage = asset('assets/web/image/me.png');
     $seoImageAlt = 'تصویر پروفایل حمیدرضا نیاکان';
+    $seoBanner = asset('assets/web/image/og-banner.png');
+    $seoBannerAlt = 'حمیدرضا نیاکان — توسعه‌دهنده ارشد بک‌اند (Laravel، PHP، Go)';
 
     $structuredData = [
         '@context' => 'https://schema.org',
@@ -116,20 +118,20 @@
 <meta property="og:site_name" content="پورتفولیوی حمیدرضا نیاکان">
 <meta property="og:title" content="{{ $seoTitle }}">
 <meta property="og:description" content="{{ $socialDescription }}">
-<meta property="og:image" content="{{ $seoImage }}">
+<meta property="og:image" content="{{ $seoBanner }}">
 <meta property="og:image:type" content="image/png">
-<meta property="og:image:width" content="747">
-<meta property="og:image:height" content="752">
-<meta property="og:image:alt" content="{{ $seoImageAlt }}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="{{ $seoBannerAlt }}">
 <meta property="og:locale" content="fa_IR">
 <meta property="profile:first_name" content="حمیدرضا">
 <meta property="profile:last_name" content="نیاکان">
 
-<meta name="twitter:card" content="summary">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="{{ $seoTitle }}">
 <meta name="twitter:description" content="{{ $socialDescription }}">
-<meta name="twitter:image" content="{{ $seoImage }}">
-<meta name="twitter:image:alt" content="{{ $seoImageAlt }}">
+<meta name="twitter:image" content="{{ $seoBanner }}">
+<meta name="twitter:image:alt" content="{{ $seoBannerAlt }}">
 
 <script type="application/ld+json">
     {!! json_encode($structuredData, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) !!}
