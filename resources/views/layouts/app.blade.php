@@ -54,9 +54,30 @@
     {{ $slot }}
 </main>
 
+@php
+    $shareUrl = urlencode(url('/'));
+    $shareText = urlencode('پورتفولیوی حمیدرضا نیاکان | متخصص Laravel و توسعه بک‌اند');
+@endphp
 <footer class="footer">
     <div class="container footer-inner">
         <p>© ۲۰۲۶ حمیدرضا نیاکان</p>
+
+        <div class="footer-share" aria-label="اشتراک‌گذاری این صفحه">
+            <span class="footer-share-label">اشتراک‌گذاری</span>
+            <a href="https://t.me/share/url?url={{ $shareUrl }}&amp;text={{ $shareText }}" target="_blank" rel="noopener noreferrer" aria-label="اشتراک‌گذاری در تلگرام">
+                <i class="fab fa-telegram" aria-hidden="true"></i>
+            </a>
+            <a href="https://api.whatsapp.com/send?text={{ $shareText }}%20{{ $shareUrl }}" target="_blank" rel="noopener noreferrer" aria-label="اشتراک‌گذاری در واتساپ">
+                <i class="fab fa-whatsapp" aria-hidden="true"></i>
+            </a>
+            <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ $shareUrl }}" target="_blank" rel="noopener noreferrer" aria-label="اشتراک‌گذاری در لینکدین">
+                <i class="fab fa-linkedin-in" aria-hidden="true"></i>
+            </a>
+            <a href="https://twitter.com/intent/tweet?url={{ $shareUrl }}&amp;text={{ $shareText }}" target="_blank" rel="noopener noreferrer" aria-label="اشتراک‌گذاری در ایکس">
+                <i class="fab fa-x-twitter" aria-hidden="true"></i>
+            </a>
+        </div>
+
         <div class="footer-social" aria-label="شبکه‌های اجتماعی">
             <a href="https://github.com/HamidNiakan" target="_blank" rel="noopener noreferrer" aria-label="گیت‌هاب حمیدرضا نیاکان">
                 <i class="fab fa-github" aria-hidden="true"></i>

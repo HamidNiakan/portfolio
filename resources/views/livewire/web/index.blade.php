@@ -3,11 +3,15 @@
         <div class="container hero-grid">
             <div class="hero-copy">
                 <p class="eyebrow"><span class="status-dot" aria-hidden="true"></span> Senior Backend Developer</p>
-                <h1 id="hero-title">حمیدرضا نیاکان</h1>
+                <h1 id="hero-title">
+                    <span class="hero-name">حمیدرضا نیاکان</span>
+                    <span class="hero-role">متخصص Laravel و توسعه بک‌اند</span>
+                </h1>
                 <p class="hero-lead">بک‌اندی که زیر فشار واقعی، قابل اتکا باقی می‌ماند.</p>
                 <p class="hero-description">
-                    بیش از ۸ سال تجربه در طراحی و توسعه سامانه‌های تحت وب با Laravel، PHP و Go؛
-                    از معماری API و بهینه‌سازی داده تا استقرار و پایش سرویس‌ها.
+                    بیش از ۸ سال تجربه در طراحی و توسعه سامانه‌های تحت وب دارم.
+                    تخصص اصلی من Laravel، PHP و Go است.
+                    کارم از معماری API و بهینه‌سازی داده تا استقرار و پایش سرویس‌ها را پوشش می‌دهد.
                 </p>
 
                 <div class="hero-actions">
@@ -60,13 +64,15 @@
             </div>
             <div class="about-copy">
                 <p>
-                    توسعه‌دهنده بک‌اند با تمرکز بر ساخت سرویس‌های مقیاس‌پذیر و قابل نگهداری هستم. تجربه من شامل
-                    APIهای RESTful، معماری ماژولار و Microservices، بهینه‌سازی پایگاه‌داده، پردازش‌های صف‌محور و
-                    کار با Redis، Elasticsearch، Docker، Kubernetes و CI/CD است.
+                    توسعه‌دهنده بک‌اند با تمرکز بر ساخت سرویس‌های مقیاس‌پذیر و قابل نگهداری هستم.
+                    کارم روی APIهای RESTful، معماری ماژولار و Microservices متمرکز است.
+                    در کنار آن، بهینه‌سازی پایگاه‌داده و پردازش‌های صف‌محور را انجام می‌دهم.
+                    ابزارهای اصلی‌ام Redis، Elasticsearch، Docker، Kubernetes و CI/CD هستند.
                 </p>
                 <p>
-                    در پروژه‌های مختلف روی بهبود عملکرد سیستم، بازطراحی کدهای قدیمی و تبدیل نیاز محصول به راهکار
-                    فنی قابل اجرا کار کرده‌ام و همکاری نزدیک با تیم‌های محصول و Front-end بخش ثابتی از کارم بوده است.
+                    در پروژه‌های مختلف روی بهبود عملکرد سیستم و بازطراحی کدهای قدیمی کار کرده‌ام.
+                    تبدیل نیاز محصول به راهکار فنی قابل اجرا بخش مهمی از کارم است.
+                    همکاری نزدیک با تیم‌های محصول و Front-end همیشه برایم اولویت بوده است.
                 </p>
                 <ul class="work-principles" aria-label="اصول کاری">
                     <li><i class="fas fa-check" aria-hidden="true"></i> کد خوانا و قابل تست</li>
@@ -252,7 +258,7 @@
                     <i class="fab fa-telegram" aria-hidden="true"></i>
                 </a>
                 <a href="https://wa.me/989178223037" target="_blank" rel="noopener noreferrer">
-                    <span><small>واتساپ</small><b dir="ltr">+98 917 822 3037</b></span>
+                    <span><small>واتساپ</small><b>گفت‌وگوی مستقیم</b></span>
                     <i class="fab fa-whatsapp" aria-hidden="true"></i>
                 </a>
                 <p><i class="fas fa-location-dot" aria-hidden="true"></i> تهران، ایران</p>
