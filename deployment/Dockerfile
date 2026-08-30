@@ -11,8 +11,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-#COPY ../composer.json ../composer.lock ./
-COPY composer.json composer.lock ./
+COPY ../composer.json ../composer.lock ./
 RUN composer install --no-dev --prefer-dist --no-interaction --no-progress --no-scripts --no-autoloader
 
 # =========================
@@ -21,13 +20,11 @@ RUN composer install --no-dev --prefer-dist --no-interaction --no-progress --no-
 FROM node:22-bookworm-slim AS node_build
 WORKDIR /app
 
-#COPY ../package.json ../package-lock.json ./
-COPY package.json package-lock.json ./
+COPY ../package.json ../package-lock.json ./
 RUN npm ci
 COPY . .
 COPY --from=php_vendor /app/vendor ./vendor
-#RUN if npm run | grep -q "build"; then npm run build; else echo "No build script, skipping."; fi
-RUN npm run build
+RUN if npm run | grep -q "build"; then npm run build; else echo "No build script, skipping."; fi
 
 # =========================
 # Stage 3: Runtime (PHP-FPM)
