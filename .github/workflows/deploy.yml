@@ -1,0 +1,123 @@
+name: Deploy production
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Deploy to server
+    runs-on: ubuntu-latest
+    environment: production
+    env:
+      SSH_HOST: ${{ secrets.SSH_HOST }}
+      SSH_USER: ${{ secrets.SSH_USER }}
+      SSH_PORT: ${{ secrets.SSH_PORT || '22' }}
+      SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+      SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
+      DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+      APP_ENV_FILE: ${{ secrets.APP_ENV_FILE }}
+      MARIADB_APP_PASSWORD: ${{ secrets.MARIADB_APP_PASSWORD }}
+      MARIADB_ROOT_PASSWORD: ${{ secrets.MARIADB_ROOT_PASSWORD }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Validate secrets
+        shell: bash
+        run: |
+          set -euo pipefail
+          : "${SSH_HOST:?Missing SSH_HOST secret}"
+          : "${SSH_USER:?Missing SSH_USER secret}"
+          : "${SSH_PORT:?Missing SSH_PORT secret}"
+          : "${SSH_PRIVATE_KEY:?Missing SSH_PRIVATE_KEY secret}"
+          : "${DEPLOY_PATH:?Missing DEPLOY_PATH secret}"
+          : "${APP_ENV_FILE:?Missing APP_ENV_FILE secret}"
+          : "${MARIADB_APP_PASSWORD:?Missing MARIADB_APP_PASSWORD secret}"
+          : "${MARIADB_ROOT_PASSWORD:?Missing MARIADB_ROOT_PASSWORD secret}"
+
+      - name: Prepare SSH
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+
+          if [ -n "$SSH_KNOWN_HOSTS" ]; then
+            printf '%s\n' "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          else
+            ssh-keyscan -p "$SSH_PORT" "$SSH_HOST" > ~/.ssh/known_hosts
+          fi
+
+      - name: Sync project files
+        shell: bash
+        run: |
+          set -euo pipefail
+          ssh -i ~/.ssh/deploy_key -p "$SSH_PORT" "$SSH_USER@$SSH_HOST" "mkdir -p '$DEPLOY_PATH'"
+
+          rsync -az --delete \
+            --exclude='.git/' \
+            --exclude='.github/' \
+            --exclude='.env' \
+            --exclude='.env.*' \
+            --exclude='.mariadb_password' \
+            --exclude='.mariadb_root_password' \
+            --exclude='node_modules/' \
+            --exclude='vendor/' \
+            --exclude='public/build/' \
+            --exclude='storage/logs/*.log' \
+            -e "ssh -i ~/.ssh/deploy_key -p $SSH_PORT" \
+            ./ "$SSH_USER@$SSH_HOST:$DEPLOY_PATH/"
+
+      - name: Write production secrets
+        shell: bash
+        run: |
+          set -euo pipefail
+          tmp_dir="$(mktemp -d)"
+          trap 'rm -rf "$tmp_dir"' EXIT
+
+          printf '%s\n' "$APP_ENV_FILE" > "$tmp_dir/.env"
+          printf '%s\n' "$MARIADB_APP_PASSWORD" > "$tmp_dir/.mariadb_password"
+          printf '%s\n' "$MARIADB_ROOT_PASSWORD" > "$tmp_dir/.mariadb_root_password"
+
+          scp -i ~/.ssh/deploy_key -P "$SSH_PORT" \
+            "$tmp_dir/.env" \
+            "$tmp_dir/.mariadb_password" \
+            "$tmp_dir/.mariadb_root_password" \
+            "$SSH_USER@$SSH_HOST:$DEPLOY_PATH/"
+
+          ssh -i ~/.ssh/deploy_key -p "$SSH_PORT" "$SSH_USER@$SSH_HOST" \
+            "chmod 600 '$DEPLOY_PATH/.env' '$DEPLOY_PATH/.mariadb_password' '$DEPLOY_PATH/.mariadb_root_password'"
+
+      - name: Deploy containers
+        shell: bash
+        run: |
+          set -euo pipefail
+          ssh -i ~/.ssh/deploy_key -p "$SSH_PORT" "$SSH_USER@$SSH_HOST" bash -s -- "$DEPLOY_PATH" <<'REMOTE'
+          set -euo pipefail
+          cd "$1"
+
+          docker compose -f docker-compose-prod.yml pull mariadb redis
+          docker compose -f docker-compose-prod.yml build --pull app nginx
+          docker compose -f docker-compose-prod.yml up -d --remove-orphans
+
+          docker compose -f docker-compose-prod.yml exec -T app sh -lc 'export DB_PASSWORD="$(cat /run/secrets/mariadb_app_password)" && php artisan optimize:clear'
+          docker compose -f docker-compose-prod.yml exec -T app sh -lc 'export DB_PASSWORD="$(cat /run/secrets/mariadb_app_password)" && php artisan migrate --force'
+          docker compose -f docker-compose-prod.yml exec -T app sh -lc 'export DB_PASSWORD="$(cat /run/secrets/mariadb_app_password)" && php artisan storage:link --force'
+          docker compose -f docker-compose-prod.yml exec -T app sh -lc 'export DB_PASSWORD="$(cat /run/secrets/mariadb_app_password)" && php artisan optimize'
+
+          docker image prune -f
+          REMOTE

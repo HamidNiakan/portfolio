@@ -1,77 +1,130 @@
+name: portfolio
+
 services:
   app:
     build:
       context: .
       dockerfile: ./deployment/Dockerfile
-    image: laravel_app:latest
-    container_name: laravel_app
+      target: app
+    image: ${APP_IMAGE:-portfolio_app:latest}
     restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      APP_ENV: production
+      APP_DEBUG: "false"
+      DB_CONNECTION: mysql
+      DB_HOST: mariadb
+      DB_PORT: 3306
+      DB_DATABASE: ${DB_DATABASE:-portfolio}
+      DB_USERNAME: ${DB_USERNAME:-app}
+      DB_PASSWORD_FILE: /run/secrets/mariadb_app_password
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      CACHE_STORE: redis
+      SESSION_DRIVER: redis
+      QUEUE_CONNECTION: redis
     volumes:
-      - '.:/var/www'
-      - './storage:/var/www/storage'
-      - './bootstrap/cache:/var/www/bootstrap/cache'
+      - app_storage:/var/www/storage
+      - app_bootstrap_cache:/var/www/bootstrap/cache
     secrets:
       - mariadb_app_password
     depends_on:
-      - mariadb
-      - redis
+      mariadb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     networks:
       - laravel_network
+    healthcheck:
+      test: ["CMD-SHELL", "php-fpm -t >/dev/null 2>&1 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   nginx:
-    image: nginx:alpine
-    container_name: laravel_nginx
+    build:
+      context: .
+      dockerfile: ./deployment/Dockerfile
+      target: nginx
+    image: ${NGINX_IMAGE:-portfolio_nginx:latest}
     restart: unless-stopped
     ports:
-      - "8000:80"
+      - "${HTTP_BIND:-0.0.0.0}:${HTTP_PORT:-80}:80"
     volumes:
-      - '.:/var/www'
-      - './deployment/nginx/default.conf:/etc/nginx/conf.d/default.conf'
+      - app_storage:/var/www/storage:ro
     depends_on:
-      - app
+      app:
+        condition: service_started
     networks:
       - laravel_network
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1/ >/dev/null 2>&1 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   mariadb:
-    image: mariadb:latest
-    container_name: laravel_mariadb
+    image: mariadb:11.4
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/mariadb_app_password
-      MYSQL_DATABASE: portfolio
-      MYSQL_USER: app
-      MYSQL_PASSWORD_FILE: /run/secrets/mariadb_app_password
+      MARIADB_ROOT_PASSWORD_FILE: /run/secrets/mariadb_root_password
+      MARIADB_DATABASE: ${DB_DATABASE:-portfolio}
+      MARIADB_USER: ${DB_USERNAME:-app}
+      MARIADB_PASSWORD_FILE: /run/secrets/mariadb_app_password
     secrets:
+      - mariadb_root_password
       - mariadb_app_password
     volumes:
-      - /srv/mariadb-data:/var/lib/mysql
+      - mariadb_data:/var/lib/mysql
+      - ./deployment/mariadb/my.cnf:/etc/mysql/conf.d/my.cnf:ro
     networks:
       - laravel_network
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
 
   redis:
-    image: redis:alpine
-    container_name: laravel_redis
+    image: redis:7-alpine
     restart: unless-stopped
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
     volumes:
-      - /srv/redis-data:/data
+      - redis_data:/data
+      - ./deployment/redis/redis.conf:/usr/local/etc/redis/redis.conf:ro
     networks:
       - laravel_network
     expose:
       - "6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   phpmyadmin:
-    image: phpmyadmin/phpmyadmin:latest
-    container_name: laravel_phpmyadmin
+    image: phpmyadmin/phpmyadmin:5
+    profiles:
+      - tools
     restart: unless-stopped
     environment:
       PMA_HOST: mariadb
       PMA_PORT: 3306
     ports:
-      - "8008:80"
+      - "${PHPMYADMIN_BIND:-127.0.0.1}:${PHPMYADMIN_PORT:-8008}:80"
     depends_on:
-      - mariadb
+      mariadb:
+        condition: service_healthy
     networks:
       - laravel_network
+
+volumes:
+  app_storage:
+  app_bootstrap_cache:
+  mariadb_data:
+  redis_data:
 
 networks:
   laravel_network:
@@ -80,3 +133,5 @@ networks:
 secrets:
   mariadb_app_password:
     file: .mariadb_password
+  mariadb_root_password:
+    file: .mariadb_root_password

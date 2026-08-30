@@ -4,6 +4,7 @@
 .env.*
 !.env.example
 .mariadb_password
+.mariadb_root_password
 .idea
 .phpunit.cache
 .phpunit.result.cache

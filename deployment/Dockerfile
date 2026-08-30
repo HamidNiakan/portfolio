@@ -163,13 +163,21 @@ RUN if getent passwd "${APP_UID}" >/dev/null; then \
             "${APP_USER}"; \
     fi
 
-RUN chown -R "${APP_USER}:www-data" /var/www && \
+RUN mkdir -p storage/app/public storage/framework/cache/data storage/framework/sessions storage/framework/testing storage/framework/views storage/logs bootstrap/cache && \
+    chown -R "${APP_USER}:www-data" /var/www && \
     find storage bootstrap/cache \
         -type d \
-        -exec chmod 0775 {} \; 2>/dev/null || true && \
+        -exec chmod 0775 {} \; && \
     find storage bootstrap/cache \
         -type f \
-        -exec chmod 0664 {} \; 2>/dev/null || true
+        -exec chmod 0664 {} \; && \
+    chmod 0755 storage storage/app storage/app/public && \
+    find storage/app/public \
+        -type d \
+        -exec chmod 0755 {} \; && \
+    find storage/app/public \
+        -type f \
+        -exec chmod 0644 {} \;
 
 
 # =========================
@@ -183,3 +191,27 @@ EXPOSE 9000
 ENTRYPOINT ["/entrypoint.sh"]
 
 CMD ["php-fpm"]
+
+
+# =========================
+# Nginx static asset image
+# =========================
+FROM nginx:stable-alpine AS nginx
+
+WORKDIR /var/www
+
+COPY deployment/nginx/default.conf \
+    /etc/nginx/conf.d/default.conf
+
+COPY --from=app \
+    /var/www/public \
+    ./public
+
+RUN mkdir -p /var/www/storage/app/public && \
+    chmod 0755 /var/www /var/www/storage /var/www/storage/app /var/www/storage/app/public
+
+EXPOSE 80
+
+
+# Keep app as the default target for plain docker build invocations.
+FROM app AS production
