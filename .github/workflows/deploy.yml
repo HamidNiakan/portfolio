@@ -17,7 +17,7 @@ permissions:
 jobs:
   deploy:
     name: Deploy to server
-    runs-on: [self-hosted, linux, x64]
+    runs-on: self-hosted
     environment: production
     env:
       DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
