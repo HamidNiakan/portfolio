@@ -27,25 +27,7 @@ RUN composer install \
 
 
 # =========================
-# Stage 2: Node (public/build)
-# =========================
-FROM node:22-bookworm-slim AS node_build
-
-WORKDIR /app
-
-COPY package.json package-lock.json ./
-
-RUN npm ci
-
-COPY . .
-
-COPY --from=php_vendor /app/vendor ./vendor
-
-RUN npm run build
-
-
-# =========================
-# Stage 3: Runtime (PHP-FPM)
+# Stage 2: Runtime (PHP-FPM)
 # =========================
 FROM php:8.4-fpm AS app
 
@@ -115,10 +97,6 @@ COPY --from=php_vendor \
     /app/vendor \
     ./vendor
 
-COPY --from=node_build \
-    /app/public/build \
-    ./public/build
-
 COPY --from=composer:2 \
     /usr/bin/composer \
     /usr/bin/composer
@@ -185,8 +163,7 @@ WORKDIR /var/www
 COPY deployment/nginx/default.conf \
     /etc/nginx/conf.d/default.conf
 
-COPY --from=node_build \
-    /app/public \
+COPY public \
     ./public
 
 RUN mkdir -p /var/www/storage/app/public && \
