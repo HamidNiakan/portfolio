@@ -73,7 +73,8 @@ jobs:
           printf '%s\n' "$APP_ENV_FILE" > "$DEPLOY_PATH/.env"
           printf '%s\n' "$MARIADB_APP_PASSWORD" > "$DEPLOY_PATH/.mariadb_password"
           printf '%s\n' "$MARIADB_ROOT_PASSWORD" > "$DEPLOY_PATH/.mariadb_root_password"
-          chmod 600 "$DEPLOY_PATH/.env" "$DEPLOY_PATH/.mariadb_password" "$DEPLOY_PATH/.mariadb_root_password"
+          chmod 600 "$DEPLOY_PATH/.env" "$DEPLOY_PATH/.mariadb_root_password"
+          chmod 644 "$DEPLOY_PATH/.mariadb_password"
 
       - name: Deploy containers
         shell: bash
