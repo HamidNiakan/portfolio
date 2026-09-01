@@ -50,7 +50,7 @@ services:
     image: ${NGINX_IMAGE:-portfolio_nginx:latest}
     restart: unless-stopped
     ports:
-      - "${HTTP_BIND:-0.0.0.0}:${HTTP_PORT:-80}:80"
+      - "${HTTP_BIND:-127.0.0.1}:${HTTP_PORT:-8000}:80"
     volumes:
       - app_storage:/var/www/storage:ro
     depends_on:
