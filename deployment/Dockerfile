@@ -58,17 +58,7 @@ ARG APP_UID=1000
 RUN set -eux; \
     apt-get update; \
     apt-get install -y --no-install-recommends \
-        vim \
-        libpng-dev \
-        libjpeg-dev \
-        libfreetype6-dev \
-        libxml2-dev \
-        libzip-dev \
-        libicu-dev \
-        zlib1g-dev \
         libonig-dev \
-        git \
-        unzip \
         ca-certificates \
         wget \
         autoconf \
@@ -76,19 +66,11 @@ RUN set -eux; \
         gcc \
         pkg-config \
         mariadb-client; \
-    docker-php-ext-configure gd \
-        --with-freetype \
-        --with-jpeg; \
     docker-php-ext-install -j"$(nproc)" \
         pdo_mysql \
         mbstring \
-        exif \
         pcntl \
-        gd \
-        bcmath \
-        opcache \
-        intl \
-        zip; \
+        opcache; \
     tmpdir="$(mktemp -d)"; \
     cd "$tmpdir"; \
     wget -qO phpredis.tar.gz \
