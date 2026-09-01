@@ -55,12 +55,62 @@
 </main>
 
 @php
-    $shareUrl = urlencode(url('/'));
-    $shareText = urlencode('پورتفولیوی حمیدرضا نیاکان | متخصص Laravel و توسعه بک‌اند');
+    $footerUrl = rtrim(config('app.url') ?: url('/'), '/');
+    $shareUrl = urlencode($footerUrl);
+    $shareText = urlencode('حمیدرضا نیاکان | متخصص Laravel و Go، توسعه‌دهنده بک‌اند');
 @endphp
-<footer class="footer">
+<footer class="footer" aria-labelledby="footer-title">
     <div class="container footer-inner">
-        <p>© ۲۰۲۶ حمیدرضا نیاکان</p>
+        <div class="footer-brand">
+            <a class="footer-mark" href="#home" aria-label="رفتن به ابتدای صفحه">HN</a>
+            <div>
+                <h2 id="footer-title">حمیدرضا نیاکان</h2>
+                <p>متخصص Laravel و Go برای طراحی API، توسعه بک‌اند، بهینه‌سازی دیتابیس و استقرار Production.</p>
+            </div>
+        </div>
+
+        <nav class="footer-nav" aria-label="لینک‌های اصلی">
+            <h3>دسترسی سریع</h3>
+            <a href="#about">درباره من</a>
+            <a href="#impact">خدمات تخصصی</a>
+            <a href="#skills">مهارت‌ها</a>
+            <a href="#experience">سوابق کاری</a>
+            <a href="#contact">تماس</a>
+        </nav>
+
+        <nav class="footer-nav" aria-label="تخصص‌های فنی">
+            <h3>تخصص‌ها</h3>
+            <a href="#impact">متخصص Laravel</a>
+            <a href="#impact">برنامه‌نویس Go</a>
+            <a href="#impact">طراحی REST API</a>
+            <a href="#impact">بهینه‌سازی دیتابیس</a>
+            <a href="#impact">Docker و DevOps</a>
+        </nav>
+
+        <div class="footer-contact">
+            <h3>تماس مستقیم</h3>
+            <a href="mailto:hamid.niakan1993@gmail.com" dir="ltr">hamid.niakan1993@gmail.com</a>
+            <a href="tel:+989178223037" dir="ltr">+98 917 822 3037</a>
+            <a href="https://t.me/DeveloperProgrammer" target="_blank" rel="noopener noreferrer" dir="ltr">@DeveloperProgrammer</a>
+            <div class="footer-social" aria-label="شبکه‌های اجتماعی">
+                <a href="https://github.com/HamidNiakan" target="_blank" rel="noopener noreferrer" aria-label="گیت‌هاب حمیدرضا نیاکان">
+                    <i class="fab fa-github" aria-hidden="true"></i>
+                </a>
+                <a href="https://www.linkedin.com/in/hamid-reza-niakan-563805113" target="_blank" rel="noopener noreferrer" aria-label="لینکدین حمیدرضا نیاکان">
+                    <i class="fab fa-linkedin-in" aria-hidden="true"></i>
+                </a>
+                <a href="https://t.me/DeveloperProgrammer" target="_blank" rel="noopener noreferrer" aria-label="تلگرام حمیدرضا نیاکان">
+                    <i class="fab fa-telegram" aria-hidden="true"></i>
+                </a>
+                <a href="https://wa.me/989178223037" target="_blank" rel="noopener noreferrer" aria-label="واتساپ حمیدرضا نیاکان">
+                    <i class="fab fa-whatsapp" aria-hidden="true"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container footer-bottom">
+        <p>© ۲۰۲۶ حمیدرضا نیاکان. توسعه بک‌اند با Laravel، Go و PHP.</p>
 
         <div class="footer-share" aria-label="اشتراک‌گذاری این صفحه">
             <span class="footer-share-label">اشتراک‌گذاری</span>
@@ -73,23 +123,8 @@
             <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ $shareUrl }}" target="_blank" rel="noopener noreferrer" aria-label="اشتراک‌گذاری در لینکدین">
                 <i class="fab fa-linkedin-in" aria-hidden="true"></i>
             </a>
-            <a href="https://twitter.com/intent/tweet?url={{ $shareUrl }}&amp;text={{ $shareText }}" target="_blank" rel="noopener noreferrer" aria-label="اشتراک‌گذاری در ایکس">
-                <i class="fab fa-x-twitter" aria-hidden="true"></i>
-            </a>
-        </div>
-
-        <div class="footer-social" aria-label="شبکه‌های اجتماعی">
-            <a href="https://github.com/HamidNiakan" target="_blank" rel="noopener noreferrer" aria-label="گیت‌هاب حمیدرضا نیاکان">
-                <i class="fab fa-github" aria-hidden="true"></i>
-            </a>
-            <a href="https://www.linkedin.com/in/hamid-reza-niakan-563805113" target="_blank" rel="noopener noreferrer" aria-label="لینکدین حمیدرضا نیاکان">
-                <i class="fab fa-linkedin-in" aria-hidden="true"></i>
-            </a>
-            <a href="https://t.me/DeveloperProgrammer" target="_blank" rel="noopener noreferrer" aria-label="تلگرام حمیدرضا نیاکان">
-                <i class="fab fa-telegram" aria-hidden="true"></i>
-            </a>
-            <a href="https://wa.me/989178223037" target="_blank" rel="noopener noreferrer" aria-label="واتساپ حمیدرضا نیاکان">
-                <i class="fab fa-whatsapp" aria-hidden="true"></i>
+            <a href="https://twitter.com/intent/tweet?url={{ $shareUrl }}&amp;text={{ $shareText }}" target="_blank" rel="noopener noreferrer" aria-label="اشتراک‌گذاری در توییتر / ایکس">
+                <i class="fab fa-twitter" aria-hidden="true"></i>
             </a>
         </div>
     </div>

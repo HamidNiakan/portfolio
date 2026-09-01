@@ -1,12 +1,13 @@
 @php
-    $seoTitle = 'حمیدرضا نیاکان | متخصص Laravel و توسعه بک‌اند';
-    $seoDescription = 'برای همکاری و اجرای پروژه‌های بک‌اند، طراحی API و بهینه‌سازی سامانه‌های Laravel، PHP و Go با حمیدرضا نیاکان، توسعه‌دهنده ارشد با بیش از ۸ سال تجربه، در تماس باشید.';
-    $socialDescription = 'طراحی و توسعه پروژه‌های بک‌اند با Laravel، PHP و Go؛ از معماری API تا بهینه‌سازی و استقرار.';
-    $seoUrl = url('/');
-    $seoImage = asset('assets/web/image/me.png');
-    $seoImageAlt = 'تصویر پروفایل حمیدرضا نیاکان';
-    $seoBanner = asset('assets/web/image/og-banner.png');
-    $seoBannerAlt = 'حمیدرضا نیاکان — توسعه‌دهنده ارشد بک‌اند (Laravel، PHP، Go)';
+    $siteUrl = rtrim(config('app.url') ?: url('/'), '/');
+    $seoTitle = 'حمیدرضا نیاکان | متخصص Laravel و Go، توسعه‌دهنده بک‌اند';
+    $seoDescription = 'متخصص Laravel و Go برای توسعه بک‌اند، طراحی REST API، بهینه‌سازی MySQL و PostgreSQL، Redis، Docker و استقرار Production؛ آماده همکاری پروژه‌ای و تیمی.';
+    $socialDescription = 'توسعه بک‌اند با Laravel، PHP و Go؛ از طراحی API و میکروسرویس تا بهینه‌سازی دیتابیس، Docker و استقرار Production.';
+    $seoUrl = $siteUrl;
+    $seoImage = $siteUrl.'/assets/web/image/me.png';
+    $seoImageAlt = 'تصویر حمیدرضا نیاکان، متخصص Laravel و Go';
+    $seoBanner = $siteUrl.'/assets/web/image/og-banner.png';
+    $seoBannerAlt = 'حمیدرضا نیاکان، متخصص Laravel و Go و توسعه‌دهنده ارشد بک‌اند';
 
     $structuredData = [
         '@context' => 'https://schema.org',
@@ -17,7 +18,9 @@
                 'url' => $seoUrl,
                 'name' => 'پورتفولیوی حمیدرضا نیاکان',
                 'alternateName' => 'Hamidreza Niakan Portfolio',
+                'description' => $seoDescription,
                 'inLanguage' => 'fa-IR',
+                'publisher' => ['@id' => $seoUrl.'#person'],
             ],
             [
                 '@type' => 'ProfilePage',
@@ -29,6 +32,7 @@
                 'isPartOf' => ['@id' => $seoUrl.'#website'],
                 'mainEntity' => ['@id' => $seoUrl.'#person'],
                 'primaryImageOfPage' => ['@id' => $seoUrl.'#profile-image'],
+                'about' => ['@id' => $seoUrl.'#person'],
             ],
             [
                 '@type' => 'ImageObject',
@@ -46,7 +50,8 @@
                 'alternateName' => 'Hamidreza Niakan',
                 'url' => $seoUrl,
                 'image' => ['@id' => $seoUrl.'#profile-image'],
-                'jobTitle' => 'Senior Backend Developer',
+                'mainEntityOfPage' => ['@id' => $seoUrl.'#profile-page'],
+                'jobTitle' => 'متخصص Laravel و Go، توسعه‌دهنده ارشد بک‌اند',
                 'description' => $seoDescription,
                 'email' => 'mailto:hamid.niakan1993@gmail.com',
                 'telephone' => '+989178223037',
@@ -57,15 +62,26 @@
                 ],
                 'knowsAbout' => [
                     'Laravel',
+                    'لاراول',
                     'PHP',
                     'Go',
+                    'Golang',
+                    'برنامه‌نویسی Go',
+                    'توسعه بک‌اند',
+                    'Back-end Development',
                     'REST API',
+                    'طراحی API',
                     'Microservices',
                     'Docker',
                     'Kubernetes',
                     'Redis',
+                    'MySQL',
                     'PostgreSQL',
+                    'Elasticsearch',
+                    'CI/CD',
+                    'بهینه‌سازی پایگاه‌داده',
                 ],
+                'knowsLanguage' => ['fa', 'en'],
                 'address' => [
                     '@type' => 'PostalAddress',
                     'addressLocality' => 'تهران',
@@ -73,9 +89,9 @@
                 ],
                 'hasOccupation' => [
                     '@type' => 'Occupation',
-                    'name' => 'Senior Backend Developer',
-                    'description' => 'طراحی و توسعه بک‌اند، API و سامانه‌های مقیاس‌پذیر',
-                    'skills' => 'Laravel, PHP, Go, REST API, Microservices, Docker, Kubernetes',
+                    'name' => 'Senior Backend Developer / Laravel and Go Specialist',
+                    'description' => 'طراحی و توسعه بک‌اند، REST API، میکروسرویس و سامانه‌های مقیاس‌پذیر با Laravel، PHP و Go',
+                    'skills' => 'Laravel, PHP, Go, Golang, REST API, Microservices, MySQL, PostgreSQL, Redis, Docker, Kubernetes, CI/CD',
                 ],
                 'contactPoint' => [
                     [

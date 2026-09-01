@@ -5,13 +5,13 @@
                 <p class="eyebrow"><span class="status-dot" aria-hidden="true"></span> Senior Backend Developer</p>
                 <h1 id="hero-title">
                     <span class="hero-name">حمیدرضا نیاکان</span>
-                    <span class="hero-role">متخصص Laravel و توسعه بک‌اند</span>
+                    <span class="hero-role">متخصص Laravel و Go، توسعه‌دهنده بک‌اند</span>
                 </h1>
                 <p class="hero-lead">بک‌اندی که زیر فشار واقعی، قابل اتکا باقی می‌ماند.</p>
                 <p class="hero-description">
                     بیش از ۸ سال تجربه در طراحی و توسعه سامانه‌های تحت وب دارم.
-                    تخصص اصلی من Laravel، PHP و Go است.
-                    کارم از معماری API و بهینه‌سازی داده تا استقرار و پایش سرویس‌ها را پوشش می‌دهد.
+                    به عنوان متخصص Laravel و برنامه‌نویس Go، کارم از طراحی REST API و میکروسرویس
+                    تا بهینه‌سازی داده، Redis، Docker و استقرار Production را پوشش می‌دهد.
                 </p>
 
                 <div class="hero-actions">
@@ -51,7 +51,7 @@
 
         <div class="container hero-facts" aria-label="خلاصه تخصص">
             <div><strong>+۸</strong><span>سال تجربه حرفه‌ای</span></div>
-            <div><strong>Laravel / PHP / Go</strong><span>پشته اصلی توسعه</span></div>
+            <div><strong>Laravel / PHP / Go</strong><span>توسعه بک‌اند و API</span></div>
             <div><strong>API &amp; Infrastructure</strong><span>تمرکز فنی</span></div>
         </div>
     </section>
@@ -65,7 +65,8 @@
             <div class="about-copy">
                 <p>
                     توسعه‌دهنده بک‌اند با تمرکز بر ساخت سرویس‌های مقیاس‌پذیر و قابل نگهداری هستم.
-                    کارم روی APIهای RESTful، معماری ماژولار و Microservices متمرکز است.
+                    اگر به متخصص Laravel برای توسعه API، بازطراحی پروژه‌های قدیمی یا برنامه‌نویس Go
+                    برای میکروسرویس نیاز دارید، تجربه اصلی من دقیقاً در همین نقطه است.
                     در کنار آن، بهینه‌سازی پایگاه‌داده و پردازش‌های صف‌محور را انجام می‌دهم.
                     ابزارهای اصلی‌ام Redis، Elasticsearch، Docker، Kubernetes و CI/CD هستند.
                 </p>
@@ -88,30 +89,30 @@
             <div class="section-heading section-heading-row">
                 <div>
                     <p class="section-index">۰۲</p>
-                    <h2 id="impact-title">حوزه‌های اثرگذاری</h2>
+                    <h2 id="impact-title">خدمات تخصصی بک‌اند</h2>
                 </div>
-                <p>مسئله‌هایی که در آن‌ها بیشترین تجربه عملی را دارم.</p>
+                <p>مسئله‌هایی که در پروژه‌های Laravel، Go و سامانه‌های پرترافیک بیشترین تجربه عملی را در آن‌ها دارم.</p>
             </div>
 
             <div class="impact-grid">
                 <article class="impact-card">
                     <span class="impact-number">01</span>
                     <i class="fas fa-diagram-project" aria-hidden="true"></i>
-                    <h3>معماری و توسعه API</h3>
+                    <h3>توسعه API با Laravel و Go</h3>
                     <p>طراحی RESTful API، احراز هویت و RBAC، معماری ماژولار و Microservices با تمرکز بر توسعه‌پذیری.</p>
                     <ul><li>Laravel Sanctum &amp; JWT</li><li>Swagger / OpenAPI</li><li>Go Microservices</li></ul>
                 </article>
                 <article class="impact-card">
                     <span class="impact-number">02</span>
                     <i class="fas fa-gauge-high" aria-hidden="true"></i>
-                    <h3>کارایی و پردازش داده</h3>
+                    <h3>بهینه‌سازی Laravel، دیتابیس و Redis</h3>
                     <p>بهینه‌سازی Query و Index، پردازش‌های Asynchronous و طراحی جریان‌های داده برای بارهای واقعی.</p>
                     <ul><li>MySQL &amp; PostgreSQL</li><li>Redis &amp; Queue</li><li>Elasticsearch</li></ul>
                 </article>
                 <article class="impact-card">
                     <span class="impact-number">03</span>
                     <i class="fas fa-server" aria-hidden="true"></i>
-                    <h3>تحویل و عملیات</h3>
+                    <h3>استقرار Docker و Production</h3>
                     <p>آماده‌سازی مسیر قابل تکرار برای تست، استقرار، Logging، Monitoring و مدیریت سرویس‌ها.</p>
                     <ul><li>Docker &amp; Kubernetes</li><li>GitLab CI/CD</li><li>Nginx &amp; Supervisor</li></ul>
                 </article>
@@ -123,13 +124,13 @@
         <div class="container skills-layout">
             <div class="section-heading">
                 <p class="section-index">۰۳</p>
-                <h2 id="skills-title">پشته فنی</h2>
+                <h2 id="skills-title">مهارت‌های Laravel، Go و بک‌اند</h2>
                 <p>ابزارهایی که در پروژه‌های واقعی با آن‌ها کار کرده‌ام.</p>
             </div>
             <div class="skill-groups">
                 <div class="skill-group">
                     <h3>Backend</h3>
-                    <p>PHP <span>·</span> Laravel <span>·</span> Livewire <span>·</span> Go <span>·</span> REST API</p>
+                    <p>PHP <span>·</span> Laravel / لاراول <span>·</span> Livewire <span>·</span> Go / Golang <span>·</span> REST API</p>
                 </div>
                 <div class="skill-group">
                     <h3>Data</h3>
@@ -159,7 +160,7 @@
                 <details class="experience-item" open>
                     <summary>
                         <span class="experience-date">آبان ۱۴۰۲ — اکنون</span>
-                        <span class="experience-role">Senior Backend Developer (Laravel)</span>
+                        <span class="experience-role">Senior Backend Developer (Laravel / Go)</span>
                         <span class="experience-company">سمرتک · تهران</span>
                         <i class="fas fa-plus" aria-hidden="true"></i>
                     </summary>
@@ -242,7 +243,7 @@
             <div class="contact-copy">
                 <p class="section-index">۰۵</p>
                 <h2 id="contact-title">برای یک گفت‌وگوی فنی آماده‌ام.</h2>
-                <p>برای فرصت شغلی، همکاری پروژه‌ای یا تبادل نظر درباره یک مسئله بک‌اند، مستقیم با من در تماس باشید.</p>
+                <p>برای استخدام متخصص Laravel، همکاری پروژه‌ای با برنامه‌نویس Go یا تبادل نظر درباره یک مسئله بک‌اند، مستقیم با من در تماس باشید.</p>
             </div>
             <div class="contact-links">
                 <a href="mailto:hamid.niakan1993@gmail.com">

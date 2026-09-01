@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+        xmlns:xhtml="http://www.w3.org/1999/xhtml"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
     <url>
         <loc>https://dev-programmer.ir/</loc>
-        <lastmod>2026-08-03</lastmod>
+        <lastmod>2026-09-01</lastmod>
         <changefreq>monthly</changefreq>
         <priority>1.0</priority>
         <xhtml:link rel="alternate" hreflang="fa-IR" href="https://dev-programmer.ir/"/>
         <xhtml:link rel="alternate" hreflang="x-default" href="https://dev-programmer.ir/"/>
+        <image:image>
+            <image:loc>https://dev-programmer.ir/assets/web/image/me.png</image:loc>
+            <image:title>حمیدرضا نیاکان، متخصص Laravel و Go</image:title>
+            <image:caption>تصویر پروفایل حمیدرضا نیاکان، توسعه‌دهنده ارشد بک‌اند</image:caption>
+        </image:image>
     </url>
 </urlset>
