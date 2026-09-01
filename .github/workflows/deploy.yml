@@ -37,6 +37,14 @@ jobs:
           : "${APP_ENV_FILE:?Missing APP_ENV_FILE secret}"
           : "${MARIADB_APP_PASSWORD:?Missing MARIADB_APP_PASSWORD secret}"
           : "${MARIADB_ROOT_PASSWORD:?Missing MARIADB_ROOT_PASSWORD secret}"
+          printf '%s\n' "$APP_ENV_FILE" | grep -Eq '^APP_KEY=base64:.+' || {
+            echo "::error::APP_ENV_FILE must contain a non-empty APP_KEY=base64:... value"
+            exit 1
+          }
+          printf '%s\n' "$APP_ENV_FILE" | grep -Eq '^APP_URL=https?://[^[:space:]]+$' || {
+            echo "::error::APP_ENV_FILE must contain a plain APP_URL, for example APP_URL=https://dev-programmer.ir"
+            exit 1
+          }
 
       - name: Check server tools
         shell: bash
