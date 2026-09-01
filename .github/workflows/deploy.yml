@@ -81,8 +81,7 @@ jobs:
           set -euo pipefail
           cd "$DEPLOY_PATH"
 
-          docker compose -f docker-compose-prod.yml pull mariadb redis
-          docker compose -f docker-compose-prod.yml build --pull app nginx
+          docker compose -f docker-compose-prod.yml build app nginx
           docker compose -f docker-compose-prod.yml up -d --remove-orphans
 
           docker compose -f docker-compose-prod.yml exec -T app sh -lc 'export DB_PASSWORD="$(cat /run/secrets/mariadb_app_password)" && php artisan optimize:clear'

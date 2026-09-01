@@ -203,8 +203,8 @@ WORKDIR /var/www
 COPY deployment/nginx/default.conf \
     /etc/nginx/conf.d/default.conf
 
-COPY --from=app \
-    /var/www/public \
+COPY --from=node_build \
+    /app/public \
     ./public
 
 RUN mkdir -p /var/www/storage/app/public && \
